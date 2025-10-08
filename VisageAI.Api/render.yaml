@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: visageai-backend
+    env: dotnet
+    plan: free
+    branch: main
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet out/VisageAI.Api.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__AivenMySQL
+        sync: false
