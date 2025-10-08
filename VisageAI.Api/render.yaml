@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: visageai-backend
-    env: dotnet
-    plan: free
+    name: visageai-api
+    runtime: dotnet
+    repo: https://github.com/haroldmd42/promptback
     branch: main
     buildCommand: dotnet publish -c Release -o out
     startCommand: dotnet out/VisageAI.Api.dll
@@ -10,4 +10,4 @@ services:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: ConnectionStrings__AivenMySQL
-        sync: false
+        sync: false  # 🔒 No subas la cadena al repo, se configura desde el panel
