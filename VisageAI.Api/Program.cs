@@ -38,7 +38,14 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// 🔹 Usar CORS
-app.UseCors("AllowFrontend");
 
-//
+app.MapControllers();
+
+// 🔹 Render asigna el puerto dinámicamente, así que hay que leerlo desde la variable de entorno
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://*:{port}");
+
+Console.WriteLine($"🚀 Servidor iniciado en el puerto {port}");
+
+// 🔹 Ejecutar la aplicación
+app.Run();
