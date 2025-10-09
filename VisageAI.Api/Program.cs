@@ -1,35 +1,34 @@
 using Microsoft.EntityFrameworkCore;
 using VisageAI.Api.Data;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// --- HABILITAR CORS ---
+// --- CORS ---
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy => policy
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 });
 
-// --- SERVICIOS EXISTENTES ---
+// --- LEER CADENA DESDE VARIABLE DE ENTORNO ---
+var connectionString = Environment.GetEnvironmentVariable("AIVEN_MYSQL_CONNECTION");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>();
-// ...otros servicios que tengas
 
 var app = builder.Build();
 
 // --- USAR CORS ---
 app.UseCors("AllowAll");
-
-// --- RESTO DE TU PIPELINE ---
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// (opcional) endpoint raíz de prueba
+// Endpoint raíz de prueba
 app.MapGet("/", () => "✅ API de Prompts funcionando correctamente");
 
 app.Run();
